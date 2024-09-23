@@ -8,11 +8,13 @@ on:
         default: '1.0.0'
       working-directory:
         description: 'Working directory'
+        type: boolean
         required: true
         default: '.'
       infracost_enabled:
         description: 'Enable Infracost'
-        default: 'false'
+        type: boolean
+        default: false
 
 jobs:
   terraform-plan:
