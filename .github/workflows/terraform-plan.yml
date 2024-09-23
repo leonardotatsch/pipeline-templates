@@ -10,7 +10,7 @@ on:
       working-directory:
         description: 'Working directory'
         type: boolean
-        default: '${{ github.workspace }}'
+        default: './'
       infracost_enabled:
         description: 'Enable Infracost'
         type: boolean
