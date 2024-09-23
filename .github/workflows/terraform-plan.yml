@@ -38,10 +38,9 @@ jobs:
       
       - name: Setup Infracost
         if: ${{ inputs.infracost_enabled == 'true' }}
-        uses: infracost/infracost-action@v3
+        uses: infracost/actions/setup@v3
         with:
-          api_key: ${{ secrets.INFRACOST_API_KEY }}
-          no_output: true
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
 
       - name: Save Infracost Report as JSON
         if: ${{ inputs.infracost_enabled == 'true' }}
