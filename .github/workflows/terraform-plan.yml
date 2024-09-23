@@ -10,7 +10,6 @@ on:
       working-directory:
         description: 'Working directory'
         type: boolean
-        required: true
         default: '.'
       infracost_enabled:
         description: 'Enable Infracost'
