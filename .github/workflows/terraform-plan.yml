@@ -6,6 +6,7 @@ on:
       terraform-version:
         description: 'Terraform version'
         default: '1.0.0'
+        type: string
       working-directory:
         description: 'Working directory'
         type: boolean
@@ -27,7 +28,6 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ inputs.terraform-version }}
-        working-directory: ${{ inputs.working-directory }}
 
       - name: Terraform Init
         run: terraform init
