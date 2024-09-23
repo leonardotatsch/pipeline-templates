@@ -9,7 +9,7 @@ on:
         type: string
       working-directory:
         description: 'Working directory'
-        type: boolean
+        type: string
         default: './'
       infracost_enabled:
         description: 'Enable Infracost'
