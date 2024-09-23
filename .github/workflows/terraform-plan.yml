@@ -49,7 +49,7 @@ jobs:
         run: infracost breakdown --path plan.json --format json --output infracost-report.json
 
       - name: Post Infracost comment
-        if: ${{ inputs.infracost_enabled == 'true' || on.pull_request }}
+        if: ${{ inputs.infracost_enabled == 'true' }}
         run: |
           infracost comment github --path infracost-report.json \
                                    --repo $GITHUB_REPOSITORY \
