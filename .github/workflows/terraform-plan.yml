@@ -1,0 +1,54 @@
+on:
+  workflow_call:
+    inputs:
+      terraform-version:
+        description: 'Terraform version'
+        default: '1.0.0'
+      working-directory:
+        description: 'Working directory'
+        required: true
+        default: '.'
+      infracost:
+        description: 'Enable Infracost'
+        default: 'false'
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Terraform Setup ${{ inputs.terraform-version }} version
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+        working-directory: ${{ inputs.working-directory }}
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ inputs.working-directory }}
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: ${{ inputs.working-directory }}
+      
+      - name: Setup Infracost
+        if: ${{ inputs.infracost == 'true' }}
+        uses: infracost/infracost-action@v3
+        with:
+          api_key: ${{ secrets.INFRACOST_API_KEY }}
+          no_output: true
+
+      - name: Save Infracost Report as JSON
+        if: ${{ inputs.infracost == 'true' }}
+        run: infracost breakdown --path plan.json --format json --output infracost-report.json
+
+      - name: Post Infracost comment
+        if: ${{ inputs.infracost == 'true' }}
+        run: |
+          infracost comment github --path infracost-report.json \
+                                   --repo $GITHUB_REPOSITORY \
+                                   --github-token ${{github.token}} \
+                                   --pull-request ${{github.event.pull_request.number}} \
+                                   --behavior update
