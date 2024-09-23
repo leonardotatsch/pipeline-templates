@@ -8,7 +8,7 @@ on:
         description: 'Working directory'
         required: true
         default: '.'
-      infracost:
+      infracost_enabled:
         description: 'Enable Infracost'
         default: 'false'
 
@@ -34,18 +34,18 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
       
       - name: Setup Infracost
-        if: ${{ inputs.infracost == 'true' }}
+        if: ${{ inputs.infracost_enabled == 'true' }}
         uses: infracost/infracost-action@v3
         with:
           api_key: ${{ secrets.INFRACOST_API_KEY }}
           no_output: true
 
       - name: Save Infracost Report as JSON
-        if: ${{ inputs.infracost == 'true' }}
+        if: ${{ inputs.infracost_enabled == 'true' }}
         run: infracost breakdown --path plan.json --format json --output infracost-report.json
 
       - name: Post Infracost comment
-        if: ${{ inputs.infracost == 'true' }}
+        if: ${{ inputs.infracost_enabled == 'true' || on.pull_request }}
         run: |
           infracost comment github --path infracost-report.json \
                                    --repo $GITHUB_REPOSITORY \
