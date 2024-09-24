@@ -55,6 +55,9 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform-version }}
 
+      - name: Debug az cli
+        run: az version
+
       - name: 'Terraform Init'
         uses: hashicorp/terraform-github-actions@master
         with:
