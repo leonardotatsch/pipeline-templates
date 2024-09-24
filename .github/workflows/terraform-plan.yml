@@ -29,16 +29,12 @@ on:
         required: true
     secrets:
       AZURE_CLIENT_ID:
-        type: string
         required: true
       AZURE_CLIENT_SECRET:
-        type: string
         required: true
       AZURE_SUBSCRIPTION_ID:
-        type: string
         required: true
       AZURE_TENANT_ID:
-        type: string
         required: true
 
 jobs:
