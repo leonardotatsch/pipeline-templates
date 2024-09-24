@@ -4,17 +4,26 @@ on:
   workflow_call:
     inputs:
       terraform-version:
-        description: 'Terraform version'
         default: '1.0.0'
         type: string
       working-directory:
-        description: 'Working directory'
         type: string
         default: './'
       infracost_enabled:
-        description: 'Enable Infracost'
         type: boolean
         default: false
+      storage_account_name:
+        type: string
+        required: true
+      container_name:
+        type: string
+        required: true
+      tf_file_name:
+        type: string
+        required: true
+      resource_group_name:
+        type: string
+        required: true
 
 jobs:
   terraform-plan:
