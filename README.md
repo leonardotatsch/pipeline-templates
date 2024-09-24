@@ -27,7 +27,7 @@ jobs:
       environment: <environment>
       tf_apply: <true|false>
       tf_destroy: <true|false>
-      infracost_enabled: <true|false>
+      infracost_enabled: <true|false> #Needs to set INFRACOST_API_KEY secret when true
     secrets: #How to create secrets: https://docs.github.com/en/actions/reference/encrypted-secrets
       AZURE_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       AZURE_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"

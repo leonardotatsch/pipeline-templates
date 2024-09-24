@@ -52,11 +52,26 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      VARS_CONTEXT: ${{ toJson(vars) }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set env vars from vars context JSON
+        run: |
+          # Pipe the JSON string into jq
+          echo "$VARS_CONTEXT" | 
+          # Convert JSON object into an array of key-value pairs
+          jq -r 'to_entries | 
+          # Map over each key-value pair
+          .[] | 
+          # Format each pair as "KEY=VALUE" and append it all to the environment file
+          "\(.key)=\(.value)"' >> $GITHUB_ENV
+
+      - name: Check env vars
+        run: printenv
 
       - name: Terraform Setup ${{ inputs.terraform-version }} version
         uses: hashicorp/setup-terraform@v3
