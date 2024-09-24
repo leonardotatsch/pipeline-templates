@@ -33,6 +33,9 @@ on:
       tf_destroy:
         type: boolean
         default: false
+      debug_iac_run:
+        type: boolean
+        default: false
     secrets:
       INFRACOST_API_KEY:
         required: false
@@ -59,18 +62,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set env vars from vars context JSON
+      - name: Load all variables from the context
         run: |
-          # Pipe the JSON string into jq
-          echo "$VARS_CONTEXT" | 
-          # Convert JSON object into an array of key-value pairs
-          jq -r 'to_entries | 
-          # Map over each key-value pair
-          .[] | 
-          # Format each pair as "KEY=VALUE" and append it all to the environment file
+          # Load the JSON object from the VARS_CONTEXT variable
+          # Parse the JSON object and convert it to a flat list of key-value pairs
+          # Map each pair to a string with the key and value separated by an equal sign
+          # Format each string as an environment variable assignment
+          echo "$VARS_CONTEXT" |
+          jq -r 'to_entries |
+          .[] |
           "\(.key)=\(.value)"' >> $GITHUB_ENV
 
       - name: Check env vars
+        if: ${{ inputs.debug_iac_run == true }}
         run: printenv
 
       - name: Terraform Setup ${{ inputs.terraform-version }} version
