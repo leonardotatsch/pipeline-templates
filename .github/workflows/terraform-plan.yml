@@ -24,6 +24,9 @@ on:
       resource_group_name:
         type: string
         required: true
+      environment:
+        type: string
+        required: true
 
 jobs:
   terraform-plan:
@@ -33,6 +36,7 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
