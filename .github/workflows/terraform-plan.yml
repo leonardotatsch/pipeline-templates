@@ -54,23 +54,27 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Terraform Setup ${{ inputs.terraform-version }} version
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ inputs.terraform-version }}
 
-      - name: 'Terraform Init'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: ${{ inputs.terraform-version }}
-          tf_actions_subcommand: 'init'
-          tf_actions_working_dir: ${{ inputs.working-directory }}
-          tf_actions_comment: true
-          args: -upgrade -backend-config=storage_account_name=${{ inputs.storage_account_name }} -backend-config=container_name=${{ inputs.container_name }} -backend-config=key=${{ inputs.tf_file_name }} -backend-config=resource_group_name=${{ inputs.resource_group_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Terraform Init
+        run: terraform init -upgrade -backend-config=storage_account_name=${{ inputs.storage_account_name }} -backend-config=container_name=${{ inputs.container_name }} -backend-config=key=${{ inputs.tf_file_name }} -backend-config=resource_group_name=${{ inputs.resource_group_name }}
+        working-directory: ${{ inputs.working-directory }}
+
+      #- name: 'Terraform Init'
+      #  uses: hashicorp/terraform-github-actions@master
+      #  with:
+      #    tf_actions_version: ${{ inputs.terraform-version }}
+      #    tf_actions_subcommand: 'init'
+      #    tf_actions_working_dir: ${{ inputs.working-directory }}
+      #    tf_actions_comment: true
+      #    args: -upgrade -backend-config=storage_account_name=${{ inputs.storage_account_name }} -backend-config=container_name=${{ inputs.container_name }} -backend-config=key=${{ inputs.tf_file_name }} -backend-config=resource_group_name=${{ inputs.resource_group_name }}
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terraform Plan
         run: terraform plan
